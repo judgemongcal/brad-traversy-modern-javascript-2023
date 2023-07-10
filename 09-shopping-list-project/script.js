@@ -4,7 +4,12 @@ const itemList = document.getElementById('item-list');
 const clearBtn = document.getElementById('clear');
 const filterItem = document.getElementById('filter');
 
-
+// Display Existing Items from Local Storage
+const displayItems = () => {
+    const itemsFromStorage = getItemsFromStorage();
+    itemsFromStorage.forEach(item => addItemtoDOM(item));
+    resetUI();
+}
 
 // Add Item
 const onAddItemSubmit = (e) => {
@@ -44,7 +49,38 @@ const addItemtoDOM = (item) => {
 };
 
 
+// Create Button
+const createButton = (classes) => {
+    const button = document.createElement('button')
+    button.className = classes;
+    const icon = createIcon('fa-solid fa-xmark');
+    button.appendChild(icon);
+    return button;
+};
+
+
+// Create Icon
+const createIcon = (classes) => {
+    const icon = document.createElement('i');
+    icon.className = classes;
+    return icon;
+}
+
+
+// Add Item to Local Storage
 const addItemtoStorage = (item) => {
+    const itemsFromStorage = getItemsFromStorage();
+
+    // Add new Item to Array
+    itemsFromStorage.push(item);
+
+    // Convert to JSON string and set to Local Storage
+    localStorage.setItem('items', JSON.stringify(itemsFromStorage)); 
+}
+
+
+// Getting Items from Local Storage
+const getItemsFromStorage = () => {
     let itemsFromStorage;
 
     if(localStorage.getItem('items') === null) {
@@ -55,27 +91,7 @@ const addItemtoStorage = (item) => {
         itemsFromStorage = JSON.parse(localStorage.getItem('items'));
     }
 
-    // Add new Item to Array
-    itemsFromStorage.push(item);
-
-    // Convert to JSON string and set to Local Storage
-    localStorage.setItem('items', JSON.stringify(itemsFromStorage)); 
-}
-
-
-
-const createButton = (classes) => {
-    const button = document.createElement('button')
-    button.className = classes;
-    const icon = createIcon('fa-solid fa-xmark');
-    button.appendChild(icon);
-    return button;
-};
-
-const createIcon = (classes) => {
-    const icon = document.createElement('i');
-    icon.className = classes;
-    return icon;
+    return itemsFromStorage;
 }
 
 
@@ -135,10 +151,18 @@ const resetUI = () => {
 }
 
 
-// Event Listeners
-itemForm.addEventListener('submit', onAddItemSubmit);
-itemList.addEventListener('click', removeItem);
-clearBtn.addEventListener('click', clearItems);
-filterItem.addEventListener('input', filterItems)
+// Initialize App
 
-resetUI();
+const initializeApp = () => {
+    itemForm.addEventListener('submit', onAddItemSubmit);
+    itemList.addEventListener('click', removeItem);
+    clearBtn.addEventListener('click', clearItems);
+    filterItem.addEventListener('input', filterItems)
+    document.addEventListener('DOMContentLoaded', displayItems);
+
+    resetUI();
+};
+
+initializeApp();
+
+
