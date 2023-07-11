@@ -31,7 +31,14 @@ const onAddItemSubmit = (e) => {
         itemToEdit.classList.remove('edit-mode');
         itemToEdit.remove();
         isEditMode = false;
-    };
+    }
+
+    else{
+        if(checkDuplicate(newItem)){
+            alert('Item already exists!');
+            return;
+        }
+    }
 
     // Create item DOM Element
     addItemtoDOM(newItem);
@@ -115,6 +122,17 @@ const onClickItem = (e) => {
         setItemtoEdit(e.target);
     }
 };
+
+
+// Check for Duplicate
+const checkDuplicate = (item) => {
+    const itemsFromStorage = getItemsFromStorage();
+
+    return itemsFromStorage.includes(item);
+};
+
+
+
 
 // Editing an Item
 
