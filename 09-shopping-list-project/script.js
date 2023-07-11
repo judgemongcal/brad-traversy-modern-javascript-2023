@@ -3,6 +3,8 @@ const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
 const clearBtn = document.getElementById('clear');
 const filterItem = document.getElementById('filter');
+const formBtn = itemForm.querySelector('button');
+let isEditMode = false;
 
 // Display Existing Items from Local Storage
 const displayItems = () => {
@@ -21,6 +23,15 @@ const onAddItemSubmit = (e) => {
         alert('Please add an item');
         return;
     }
+
+    // Check for Edit Mode
+    if(isEditMode){
+        const itemToEdit = itemList.querySelector('.edit-mode');
+        removeItemFromStorage(itemToEdit.textContent);
+        itemToEdit.classList.remove('edit-mode');
+        itemToEdit.remove();
+        isEditMode = false;
+    };
 
     // Create item DOM Element
     addItemtoDOM(newItem);
@@ -99,7 +110,22 @@ const onClickItem = (e) => {
     if (e.target.parentElement.classList.contains('remove-item')) {
         removeItem(e.target.parentElement.parentElement);
     }
+
+    else {
+        setItemtoEdit(e.target);
+    }
 };
+
+// Editing an Item
+
+const setItemtoEdit = (item) => {
+    isEditMode = true;
+    itemList.querySelectorAll('li').forEach(i => i.classList.remove('edit-mode'));
+    item.classList.add('edit-mode');
+    formBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Update Item';
+    formBtn.style.backgroundColor = 'green';
+    itemInput.value = item.textContent;
+}
 
 
 // Remove Item from DOM
@@ -168,6 +194,7 @@ const filterItems = (e) => {
 
 // Hide Filter and Clear when the List has no content
 const resetUI = () => {
+    itemInput.value = '';
     const items = itemList.querySelectorAll('li');
     if(items.length === 0) {
         clearBtn.style.display = 'none';
@@ -177,6 +204,10 @@ const resetUI = () => {
         clearBtn.style.display = 'block';
         filterItem.style.display = 'block';
     }
+
+    formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+    formBtn.style.backgroundColor = '#333';
+    isEditMode = false;
 }
 
 
