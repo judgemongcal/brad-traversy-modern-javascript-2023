@@ -170,7 +170,7 @@ const removeItemFromStorage = (item) => {
     itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
 
     // Re-set Local Storage
-    const result = localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+    localStorage.setItem('items', JSON.stringify(itemsFromStorage));
 
 
 
