@@ -209,7 +209,6 @@ const filterItems = (e) => {
 
 
 
-
 // Hide Filter and Clear when the List has no content
 const resetUI = () => {
     itemInput.value = '';
