@@ -6,9 +6,16 @@ const generateJoke = () => {
     xhr.open('GET', 'https://api.chucknorris.io/jokes/random');
 
     xhr.onreadystatechange = function () {
-        if(this.readyState == 4 && this.status == 200) {
-            const joke = JSON.parse(this.responseText);
-            jokeContainer.innerHTML = joke.value;
+        if(this.readyState === 4) {
+            if(this.status === 200){
+                const joke = JSON.parse(this.responseText);
+                jokeContainer.innerHTML = joke.value;
+            }
+
+            else{
+                jokeContainer.innerHTML = 'Something went wrong. Try again!';
+            }
+            
         }
     }
 
@@ -22,3 +29,4 @@ const generateJoke = () => {
 
 
 btn.addEventListener('click', generateJoke);
+document.addEventListener('DOMContentLoaded', generateJoke);
