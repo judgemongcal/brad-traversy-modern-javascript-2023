@@ -2,18 +2,63 @@ const global = {
     currentPage: window.location.pathname
 };
 
+
+const DisplayPopularMovies = async () => {
+    const { results } = await fetchAPIData('movie/popular');
+    results.forEach((movie) => {
+        const div = document.createElement('div');
+        div.classList.add('card');
+        div.innerHTML = `
+        <a href="movie-details.html?id=${movie.id}">
+            ${
+                movie.poster_path ? `<img
+                          src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+                          class="card-img-top"
+                          alt="${movie.title}"
+                        />` :
+                        `<img
+                        src="../images/no-image.jpg"
+                        class="card-img-top"
+                        alt="${movie.title}"
+                      />`
+            }
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">${movie.title}</h5>
+            <p class="card-text">
+              <small class="text-muted">Release: ${movie.release_date}</small>
+            </p>
+          </div>
+        `;
+        document.querySelector('#popular-movies').appendChild(div);
+    })
+
+
+ 
+}
+// Fetch Data from TMDB API
+
+const fetchAPIData = async (endpoint) => {
+    const API_KEY = 'a7456beaa24436c8503cde5af39f3fa0';
+    const API_URL = 'https://api.themoviedb.org/3/';
+
+    const response = await fetch(`${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`);
+
+    const data = await response.json();
+
+    return data;
+};
+
 // Highlight Active Link
 
 const highlightLink = () => {
     const links = document.querySelectorAll ('.nav-link');
     links.forEach((link) => {
-        console.log(link.pathname, global.currentPage);
         if(link.pathname === global.currentPage) {
             link.classList.add('active');
-            
-        }
-    })
-}
+        };
+    });
+};
 
 // Init App
 console.log(global.currentPage);
@@ -22,6 +67,7 @@ const init = () => {
         case '/12-flix-app-project/index.html':
         case '//12-flix-app-project/':
             console.log('movies/home');
+            DisplayPopularMovies();
             break;
         
         case '/12-flix-app-project/shows.html':
