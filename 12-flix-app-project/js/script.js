@@ -40,12 +40,11 @@ const DisplayPopularMovies = async () => {
 
 const DisplayPopularShows = async () => {
     const { results } = await fetchAPIData('tv/popular');
-    console.log(results);
     results.forEach((show) => {
         const div = document.createElement('div');
         div.classList.add('card');
         div.innerHTML = `
-            <div class="card">
+            <div class="card" id="${show.id}">
             <a href="tv-details.html?id=${show.id}">
             ${
                 show.poster_path? `
@@ -76,21 +75,6 @@ const DisplayPopularShows = async () => {
     });
 };
 
-{/* <div class="card">
-          <a href="tv-details.html?id=1">
-            <img
-              src="images/no-image.jpg"
-              class="card-img-top"
-              alt="Show Title"
-            />
-          </a>
-          <div class="card-body">
-            <h5 class="card-title">Show Title</h5>
-            <p class="card-text">
-              <small class="text-muted">Aired: XX/XX/XXXX</small>
-            </p>
-          </div>
-        </div> */}
 
 // Fetch Data from TMDB API
 
@@ -108,7 +92,7 @@ const fetchAPIData = async (endpoint) => {
 // Highlight Active Link
 
 const highlightLink = () => {
-    const links = document.querySelectorAll ('.nav-link');
+    const links = document.querySelectorAll('.nav-link');
     links.forEach((link) => {
         if(link.pathname === global.currentPage) {
             link.classList.add('active');
@@ -149,3 +133,4 @@ const init = () => {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
