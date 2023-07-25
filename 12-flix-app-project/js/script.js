@@ -76,6 +76,9 @@ const DisplayPopularShows = async () => {
     });
 };
 
+
+// Displaying Movie Details
+
 const displayMovieDetails = async () => {
     const movieId = (window.location.search).split('=')[1];
     console.log(movieId);
@@ -83,16 +86,12 @@ const displayMovieDetails = async () => {
     const movieDetails = await fetchAPIData(`movie/${movieId}`);
 
     console.log(movieDetails);
-
-    const prodCompanies = [];
-
-    movieDetails.production_companies.forEach((company) => {
-        prodCompanies.push(company.name);
-    });
     
+    // Overlay for BG Image
+    displayBackgroundImage('movie', movieDetails.backdrop_path);
 
-    const container = document.querySelector('#movie-details');
-    container.innerHTML = `
+    const div = document.createElement('div');
+    div.innerHTML = `
     <div class="details-top">
       <div>
         ${
@@ -145,10 +144,39 @@ const displayMovieDetails = async () => {
     </div>
   </div>
     `;
+    
+    document.querySelector('#movie-details').appendChild(div);
+
+};
 
 
+// Display Backdrop on Details Pages
 
+const displayBackgroundImage = (type, backgroundPath) => {
+    const overlayDiv = document.createElement('div');
+    overlayDiv.classList.add('hello');
+    overlayDiv.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${backgroundPath})`;
+    overlayDiv.style.backgroundSize = 'cover';
+    overlayDiv.style.backgroundPosition = 'center';
+    overlayDiv.style.backgroundRepeat = 'no-repeat';
+    overlayDiv.style.height = '100vh';
+    overlayDiv.style.width = '100vw';
+    overlayDiv.style.position = 'absolute';
+    overlayDiv.style.top = '0';
+    overlayDiv.style.left = '0';
+    overlayDiv.style.zIndex = '-1';
+    overlayDiv.style.opacity = '0.2';
 
+    console.log(overlayDiv);
+
+    if(type === 'movie') {
+        document.querySelector('#movie-details').appendChild(overlayDiv);
+        console.log(backgroundPath);
+    } else {
+        document.querySelector('#show-details').appendChild(overlayDiv);
+    }
+
+    console.log('done');
 };
 
 
