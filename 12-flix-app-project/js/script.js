@@ -5,6 +5,10 @@ const global = {
       type: '',
       page: 1,
       totalPages: 1
+    },
+    api: {
+      apiKey : 'a7456beaa24436c8503cde5af39f3fa0',
+      apiURL: 'https://api.themoviedb.org/3/'
     }
 };
 
@@ -255,6 +259,14 @@ const displayBackgroundImage = (type, backgroundPath) => {
     const urlParams = new URLSearchParams(queryString);
     global.search.type = urlParams.get('type');
     global.search.term = urlParams.get('search-term');
+
+    if(global.search.term !== '' && global.search.term !== null) {
+      // Make request and Display results
+      const results = await searchAPIData();
+      console.log(results);
+    } else {
+      showAlert('Please enter a search term');
+    }
   }
 
 
@@ -321,8 +333,8 @@ const initSwiper = () => {
 // Fetch Data from TMDB API
 
 const fetchAPIData = async (endpoint) => {
-    const API_KEY = 'a7456beaa24436c8503cde5af39f3fa0';
-    const API_URL = 'https://api.themoviedb.org/3/';
+    const API_KEY = global.api.apiKey;
+    const API_URL = global.api.apiURL;
 
     showSpinner(); 
 
@@ -333,6 +345,25 @@ const fetchAPIData = async (endpoint) => {
     hideSpinner();
     return data;
 };
+
+
+// Make Request to Search API Data
+
+const searchAPIData = async () => {
+  const API_KEY = global.api.apiKey;
+  const API_URL = global.api.apiURL;
+
+  showSpinner(); 
+
+  const response = await fetch(`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`);
+
+  const data = await response.json();
+
+  hideSpinner();
+  return data;
+};
+
+
 
 // Spinner
 
@@ -354,6 +385,18 @@ const highlightLink = () => {
         };
     });
 };
+
+// Show Alert
+
+const showAlert = (message, className) => {
+  const alertElement = document.createElement('div');
+  alertElement.classList.add('alert', className);
+  alertElement.appendChild(document.createTextNode(message));
+  document.querySelector('#alert').appendChild(alertElement);
+
+  setTimeout(() => alertElement.remove(), 3000);
+};
+
 
 // Init App
 console.log(global.currentPage);
