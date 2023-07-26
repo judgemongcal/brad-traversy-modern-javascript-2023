@@ -165,9 +165,7 @@ const displayMovieDetails = async () => {
 
 const displayShowDetails = async () => {
     const showID = (window.location.search).split('=')[1];
-    console.log(showID);
     const show = await fetchAPIData(`tv/${showID}`);
-    console.log(show);
 
     displayBackgroundImage('tv-show', show.backdrop_path);
     const div = document.createElement('div');
@@ -240,7 +238,6 @@ const displayBackgroundImage = (type, backgroundPath) => {
     overlayDiv.style.zIndex = '-1';
     overlayDiv.style.opacity = '0.1';
 
-    console.log(overlayDiv);
 
     if(type === 'movie') {
         document.querySelector('#movie-details').appendChild(overlayDiv);
@@ -248,7 +245,6 @@ const displayBackgroundImage = (type, backgroundPath) => {
         document.querySelector('#show-details').appendChild(overlayDiv);
     }
 
-    console.log('done');
 };
 
 
@@ -286,6 +282,12 @@ const displayBackgroundImage = (type, backgroundPath) => {
 // Display Search Results
 
 const displaySearchResults = (results) => {
+
+  // Clear Previous Results
+  document.querySelector('#search-results').innerHTML = '';
+  document.querySelector('#pagination').innerHTML = '';
+  document.querySelector('#search-results-heading').innerHTML = '';
+
   results.forEach((result) => {
     const div = document.createElement('div');
     div.classList.add('card');
@@ -307,26 +309,57 @@ const displaySearchResults = (results) => {
       </p>
     </div>
     `;
+
     document.querySelector('#search-results-heading').innerHTML = `
       <h2>${results.length} of ${global.search.totalResults} Results for ${global.search.term}</h2>
     `;
 
     document.querySelector('#search-results').appendChild(div);
   });
+
+  displayPagination();
 };
 
-{/* <div class="card">
-<a href="#">
-  <img src="images/no-image.jpg" class="card-img-top" alt="" />
-</a>
-<div class="card-body">
-  <h5 class="card-title">Movie Or Show Name</h5>
-  <p class="card-text">
-    <small class="text-muted">Release: XX/XX/XXXX</small>
-  </p>
-</div>
-</div> */}
 
+// Create and Display Pagination for Search
+
+const displayPagination = () => {
+  const div = document.createElement('div');
+  div.classList.add('pagination');
+  div.innerHTML = `
+    <button class="btn btn-primary" id="prev">Prev</button>
+    <button class="btn btn-primary" id="next">Next</button>
+    <div class="page-counter">Page ${global.search.page} of ${global.search.totalPages}</div>
+  `;
+
+  document.querySelector('#pagination').appendChild(div);
+
+  // Disable prev button if in first page
+  if(global.search.page === 1) {
+    document.querySelector('#prev').disabled = true;
+  }
+
+  // Disable next button if on the last page
+  if(global.search.page === global.search.totalPages) {
+    document.querySelector('#next').disabled = true;
+  }
+
+  // Next Page
+
+  document.querySelector('#next').addEventListener('click', async () => {
+    global.search.page++;
+    const { results } = await searchAPIData();
+    displaySearchResults(results);
+  });
+
+  // Previous Page
+
+  document.querySelector('#prev').addEventListener('click', async () => {
+    global.search.page--;
+    const { results } = await searchAPIData();
+    displaySearchResults(results);
+  });
+}
 
 
 // Display Slider Movies
@@ -413,7 +446,7 @@ const searchAPIData = async () => {
 
   showSpinner(); 
 
-  const response = await fetch(`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`);
+  const response = await fetch(`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`);
 
   const data = await response.json();
 
@@ -457,33 +490,33 @@ const showAlert = (message, className = 'error') => {
 
 
 // Init App
-console.log(global.currentPage);
+// console.log(global.currentPage);
 const init = () => {
     switch(global.currentPage) {
         case '/12-flix-app-project/index.html':
         case '//12-flix-app-project/':
-            console.log('movies/home');
+            // console.log('movies/home');
             displaySlider();
             DisplayPopularMovies();
             break;
         
         case '/12-flix-app-project/shows.html':
-            console.log('shows');
+            // console.log('shows');
             DisplayPopularShows();
             break;
 
         case '/12-flix-app-project/movie-details.html':
-            console.log('movie details');
+            // console.log('movie details');
             displayMovieDetails();
             break;
 
         case '/12-flix-app-project/tv-details.html':
-            console.log('tv details');
+            // console.log('tv details');
             displayShowDetails();
             break;
 
         case '/12-flix-app-project/search.html':
-            console.log('search');
+            // console.log('search');
             search();
             break;
 
