@@ -16,7 +16,7 @@ body {
 }
 
 #ball {
-  animation: roll infinite 3s linear;
+  /* animation: roll infinite 3s linear; */
   color: white;
   width: 25%;
   position: absolute;
