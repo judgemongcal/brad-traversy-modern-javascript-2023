@@ -10,6 +10,7 @@ class CalorieTracker {
         this._displayCaloriesConsumed();
         this._displayCaloriesBurned();
         this._displayCaloriesRemaining();
+        this._displayCaloriesProgress();
     }
 
     // Public Methods/ API
@@ -28,12 +29,7 @@ class CalorieTracker {
 
     // Private Methods
 
-    _render(){
-        this._displayCaloriesTotal();
-        this._displayCaloriesConsumed();
-        this._displayCaloriesBurned();
-        this._displayCaloriesRemaining();
-    };
+
 
     _displayCaloriesTotal() {
         const totalCaloriesEl = document.querySelector('#calories-total');
@@ -73,7 +69,39 @@ class CalorieTracker {
 
     _displayCaloriesRemaining() {
         const caloriesRemainingEl = document.querySelector('#calories-remaining');
-        caloriesRemainingEl.innerText = this._calorieLimit - this._totalCalories;
+        const progressEl = document.querySelector('#calorie-progress');
+        const calRemaining = this._calorieLimit - this._totalCalories;
+        caloriesRemainingEl.innerText = calRemaining;
+        const div = caloriesRemainingEl.parentElement.parentElement;
+        if(calRemaining <= 0) {
+
+            div.classList.remove('bg-light');
+            div.classList.add('bg-danger');
+
+  
+            progressEl.classList.remove('bg-success');
+            progressEl.classList.add('bg-danger');
+        } else{
+            div.classList.remove('bg-danger');
+            div.classList.add('bg-add');
+
+            progressEl.classList.remove('bg-danger');
+            progressEl.classList.add('bg-success');
+        }
+    };
+
+    _displayCaloriesProgress() {
+        const progressEl = document.querySelector('#calorie-progress');
+        const width = (this._totalCalories / this._calorieLimit) * 100;
+        progressEl.style.width = `${width}%`;
+    }
+
+    _render(){
+        this._displayCaloriesTotal();
+        this._displayCaloriesConsumed();
+        this._displayCaloriesBurned();
+        this._displayCaloriesRemaining();
+        this._displayCaloriesProgress();
     };
 };
 
@@ -95,13 +123,13 @@ class Workout {
 
 const tracker = new CalorieTracker();
 
-const breakfast = new Meal('Egg', 80);
+const breakfast = new Meal('Egg', 2000);
 const snack = new Meal('Brownie', 300);
 tracker.addMeal(breakfast);
 tracker.addMeal(snack);
 
-const run = new Workout('Morning Run', 120);
-const lift = new Workout('Strength Training', 200);
+const run = new Workout('Morning Run', 100);
+const lift = new Workout('Strength Training', 300);
 tracker.addWorkout(run);
 tracker.addWorkout(lift);
 
@@ -109,5 +137,6 @@ console.log(tracker._meals);
 console.log(tracker._workouts);
 console.log(tracker._totalCalories);
 
-
+const CEL = document.querySelector('#calories-remaining');
+console.log(CEL.parentElement.parentElement);
 
