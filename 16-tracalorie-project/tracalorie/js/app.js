@@ -62,6 +62,12 @@ class CalorieTracker {
         }
     }
 
+    setLimit(calorieLimit) {
+        this._calorieLimit = calorieLimit;
+        this._displayCalorieLimit();
+        this._render();
+    }
+
     // Private Methods
 
     _displayCaloriesTotal() {
@@ -109,7 +115,7 @@ class CalorieTracker {
         
         const div = caloriesRemainingEl.parentElement.parentElement;
 
-        if(calRemaining <= 0) {
+        if(calRemaining < 0) {
 
             div.classList.remove('bg-light');
             div.classList.add('bg-danger');
@@ -226,6 +232,7 @@ class App{
         document.querySelector('#filter-meals').addEventListener('keyup',this._filterItems.bind(this, 'meal'));
         document.querySelector('#filter-workouts').addEventListener('keyup',this._filterItems.bind(this, 'workout'));
         document.querySelector('#reset').addEventListener('click' ,this._reset.bind(this));
+        document.querySelector('#limit-form').addEventListener('submit' ,this._setLimit.bind(this));
     }
 
     _newItem(type, e) {
@@ -301,6 +308,24 @@ class App{
         document.querySelector('#workout-items').innerHTML = '';
         document.querySelector('#filter-meals').value = '';
         document.querySelector('#filter-workouts').value = '';
+     }
+
+     _setLimit(e){
+        e.preventDefault();
+
+        const limit = document.querySelector('#limit');
+
+        if(limit.value === '') {
+            alert('Please add a limit.');
+            return;
+        }
+
+        this._tracker.setLimit(+limit.value);
+        limit.value ='';
+
+        const modalEl = document.querySelector('#limit-modal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
      }
 }
 
