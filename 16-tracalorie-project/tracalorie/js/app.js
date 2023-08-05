@@ -7,14 +7,12 @@ class CalorieTracker {
         this._meals = [];
         this._workouts = [];
 
-        this._displayCalorieLimit;
-        this._displayCaloriesTotal;
+        this._displayCalorieLimit();
+        this._displayCaloriesTotal();
         this._displayCaloriesConsumed();
         this._displayCaloriesBurned();
         this._displayCaloriesRemaining();
         this._displayCaloriesProgress();
-        console.log(Storage.getCalorieLimit(), this._calorieLimit);
-        console.log(this._totalCalories);
     }
 
     // Public Methods/ API
@@ -41,8 +39,8 @@ class CalorieTracker {
             this._totalCalories -= meal.calories;
             this._meals.splice(index, 1);
             this._render();
-        }
-    }
+        };
+    };
 
     removeWorkout(id) {
         const index = this._workouts.findIndex((workout) => workout.id === id);
@@ -52,8 +50,8 @@ class CalorieTracker {
             this._totalCalories += workout.calories;
             this._workouts.splice(index, 1);
             this._render();
-        }
-    }
+        };
+    };
 
     reset() {
         if(confirm('You are about to reset all data. Are you sure?')){
@@ -61,15 +59,15 @@ class CalorieTracker {
             this._meals = [];
             this._workouts = [];
             this._render();
-        }
-    }
+        };
+    };
 
     setLimit(calorieLimit) {
         this._calorieLimit = calorieLimit;
         Storage.setCalorieLimit(calorieLimit);
         this._displayCalorieLimit();
         this._render();
-    }
+    };
 
     // Private Methods
 
@@ -82,7 +80,8 @@ class CalorieTracker {
     _displayCalorieLimit() {
         const calorieLimitEl = document.querySelector('#calories-limit');
         calorieLimitEl.innerText = this._calorieLimit;
-    }
+        console.log(this._calorieLimit + ' Line 85');
+    };
 
     _displayCaloriesConsumed() {
         const caloriesConsumedEl = document.querySelector('#calories-consumed');
@@ -132,14 +131,14 @@ class CalorieTracker {
 
             progressEl.classList.remove('bg-danger');
             progressEl.classList.add('bg-success');
-        }
+        };
     };
 
     _displayCaloriesProgress() {
         const progressEl = document.querySelector('#calorie-progress');
         const width = (this._totalCalories / this._calorieLimit) * 100;
         progressEl.style.width = width > 0? `${width}%` : `0%`;
-    }
+    };
 
     _displayNewMeal(meal){
         const mealsEl = document.querySelector('#meal-items');
@@ -165,7 +164,7 @@ class CalorieTracker {
         `;
 
         mealsEl.appendChild(mealEl);
-    }
+    };
 
     _displayNewWorkout(workout){
         const workoutsEl = document.querySelector('#workout-items');
@@ -191,7 +190,7 @@ class CalorieTracker {
         `;
 
         workoutsEl.appendChild(workoutEl);
-    }
+    };
 
     _render(){
         this._displayCaloriesTotal();
@@ -211,7 +210,7 @@ class Meal {
         this.id = Math.random().toString(16).slice(2);
         this.name = name;
         this.calories = calories;
-    }
+    };
 };
 
 class Workout {
@@ -219,7 +218,7 @@ class Workout {
         this.id = Math.random().toString(16).slice(2);
         this.name = name;
         this.calories = calories;
-    }
+    };
 };
 
 
@@ -232,7 +231,7 @@ class Storage {
             calorieLimit = defaultLimit;
         } else {
             calorieLimit = +localStorage.getItem('calorieLimit');
-        }
+        };
 
         return calorieLimit;
     };
@@ -258,7 +257,7 @@ class App{
         document.querySelector('#filter-workouts').addEventListener('keyup',this._filterItems.bind(this, 'workout'));
         document.querySelector('#reset').addEventListener('click' ,this._reset.bind(this));
         document.querySelector('#limit-form').addEventListener('submit' ,this._setLimit.bind(this));
-    }
+    };
 
     _newItem(type, e) {
         e.preventDefault();
@@ -287,7 +286,7 @@ class App{
         const collapseItem = document.querySelector(`#collapse-${type}`);
         const bsCollapse = new bootstrap.Collapse(collapseItem, { toggle: true});
         
-    }
+    };
 
     _newWorkout(e) {
         e.preventDefault();
@@ -299,7 +298,7 @@ class App{
             alert('Please fill in all fields.');
             return;
         }
-    }
+    };
 
     _removeItem(type, e) {
         if(e.target.classList.contains('delete') || e.target.classList.contains('fa-xmark')){
@@ -311,7 +310,7 @@ class App{
              e.target.closest('.card').remove();
          }
         } 
-     }
+     };
 
      _filterItems(type, e) {
         const text = e.target.value.toLowerCase();
@@ -325,7 +324,7 @@ class App{
                 item.style.display = 'none';
             }
         })
-     }
+     };
 
      _reset(){
         this._tracker.reset();
@@ -333,7 +332,7 @@ class App{
         document.querySelector('#workout-items').innerHTML = '';
         document.querySelector('#filter-meals').value = '';
         document.querySelector('#filter-workouts').value = '';
-     }
+     };
 
      _setLimit(e){
         e.preventDefault();
@@ -351,7 +350,7 @@ class App{
         const modalEl = document.querySelector('#limit-modal');
         const modal = bootstrap.Modal.getInstance(modalEl);
         modal.hide();
-     }
+     };
 }
 
 
