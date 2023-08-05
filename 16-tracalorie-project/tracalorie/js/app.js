@@ -2,7 +2,7 @@
 
 class CalorieTracker {
     constructor() {
-        this._calorieLimit = 2000;
+        this._calorieLimit = Storage.getCalorieLimit();
         this._totalCalories = 0;
         this._meals = [];
         this._workouts = [];
@@ -13,6 +13,8 @@ class CalorieTracker {
         this._displayCaloriesBurned();
         this._displayCaloriesRemaining();
         this._displayCaloriesProgress();
+        console.log(Storage.getCalorieLimit(), this._calorieLimit);
+        console.log(this._totalCalories);
     }
 
     // Public Methods/ API
@@ -64,6 +66,7 @@ class CalorieTracker {
 
     setLimit(calorieLimit) {
         this._calorieLimit = calorieLimit;
+        Storage.setCalorieLimit(calorieLimit);
         this._displayCalorieLimit();
         this._render();
     }
@@ -78,7 +81,7 @@ class CalorieTracker {
 
     _displayCalorieLimit() {
         const calorieLimitEl = document.querySelector('#calories-limit');
-        calorieLimitEl.innerHTML = this._calorieLimit;
+        calorieLimitEl.innerText = this._calorieLimit;
     }
 
     _displayCaloriesConsumed() {
@@ -196,6 +199,7 @@ class CalorieTracker {
         this._displayCaloriesBurned();
         this._displayCaloriesRemaining();
         this._displayCaloriesProgress();
+
     };
 };
 
@@ -217,6 +221,27 @@ class Workout {
         this.calories = calories;
     }
 };
+
+
+// Storage Class
+
+class Storage {
+    static getCalorieLimit(defaultLimit = 2000) {
+        let calorieLimit;
+        if(localStorage.getItem('calorieLimit') === null) {
+            calorieLimit = defaultLimit;
+        } else {
+            calorieLimit = +localStorage.getItem('calorieLimit');
+        }
+
+        return calorieLimit;
+    };
+
+    static setCalorieLimit(calorieLimit) {
+        localStorage.setItem('calorieLimit', calorieLimit);
+    };
+};
+
 
 
 // App Class
