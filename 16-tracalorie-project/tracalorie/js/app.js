@@ -13,6 +13,8 @@ class CalorieTracker {
         this._displayCaloriesBurned();
         this._displayCaloriesRemaining();
         this._displayCaloriesProgress();
+
+        document.querySelector('#limit').value = this._calorieLimit;
     }
 
     // Public Methods/ API
@@ -43,6 +45,7 @@ class CalorieTracker {
             this._totalCalories -= meal.calories;
             Storage.updateTotalCalories(this._totalCalories);
             this._meals.splice(index, 1);
+            Storage.removeMeal(id);
             this._render();
         };
     };
@@ -55,6 +58,7 @@ class CalorieTracker {
             this._totalCalories += workout.calories;
             Storage.updateTotalCalories(this._totalCalories);
             this._workouts.splice(index, 1);
+            Storage.removeWorkout(id);
             this._render();
         };
     };
@@ -65,6 +69,7 @@ class CalorieTracker {
             Storage.updateTotalCalories(this._totalCalories);
             this._meals = [];
             this._workouts = [];
+            Storage.resetAll();
             this._render();
         };
     };
@@ -290,6 +295,17 @@ class Storage {
         localStorage.setItem('meals', JSON.stringify(meals));
     };
 
+    static removeMeal(id){
+        const meals = Storage.getMeals();
+        meals.forEach((meal, index) => {
+            if(meal.id === id) {
+                meals.splice(index,1);
+            }
+        });
+
+        localStorage.setItem('meals', JSON.stringify(meals));
+    };
+
     // Workouts
 
     static getWorkouts(){
@@ -306,6 +322,23 @@ class Storage {
         const workouts = Storage.getWorkouts();
         workouts.push(workout);
         localStorage.setItem('workouts', JSON.stringify(workouts));
+    };
+
+    static removeWorkout(id){
+        const workouts = Storage.getWorkouts();
+        workouts.forEach((workout, index) => {
+            if(workout.id === id) {
+                workouts.splice(index,1);
+            }
+        });
+
+        localStorage.setItem('workouts', JSON.stringify(workouts));
+    };
+
+    static resetAll(){
+        localStorage.removeItem('workouts');
+        localStorage.removeItem('meals');
+        localStorage.removeItem('calorieLimit');
     }
 };
 
@@ -362,17 +395,17 @@ class App{
         
     };
 
-    _newWorkout(e) {
-        e.preventDefault();
+    // _newWorkout(e) {
+    //     e.preventDefault();
 
-        const name = document.querySelector('#workout-name');
-        const calories = document.querySelector('#workout-calories');
+    //     const name = document.querySelector('#workout-name');
+    //     const calories = document.querySelector('#workout-calories');
 
-        if(name.value === '' || calories.value === '') {
-            alert('Please fill in all fields.');
-            return;
-        }
-    };
+    //     if(name.value === '' || calories.value === '') {
+    //         alert('Please fill in all fields.');
+    //         return;
+    //     }
+    // };
 
     _removeItem(type, e) {
         if(e.target.classList.contains('delete') || e.target.classList.contains('fa-xmark')){
