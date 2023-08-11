@@ -19,6 +19,8 @@ class Stack {
 
         for (let i = this._count; i < this._items.length; i++){
             this._items[i] = this._items[i+1];
+            console.log('run');
+
         }
 
         this._items.length = this._count;
