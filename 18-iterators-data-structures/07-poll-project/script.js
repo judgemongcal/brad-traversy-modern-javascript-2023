@@ -14,7 +14,7 @@ function submitForm(e) {
     if (!selectedOption) {
         alert('Please select an option.');
         return;
-    }
+    };
 
     let voteCount = poll.get(selectedOption.value);
     poll.set(selectedOption.value, ++voteCount );
@@ -25,7 +25,7 @@ function submitForm(e) {
 
     document.querySelector('#poll-form').querySelectorAll('input, button')
     .forEach((el) => el.setAttribute('disabled', true));
-}
+};
 
 function displyResults() {
     const results = document.querySelector('#results');
@@ -35,8 +35,8 @@ function displyResults() {
         optionEl.classList.add('border-bottom', 'p-2', 'd-flex', 'justify-content-between');
         optionEl.innerHTML = `<strong>${option} : </strong> ${votes} Votes`;
         results.appendChild(optionEl);
-    }
-}
+    };
+};
 
 document.querySelector('#poll-form').addEventListener('submit', submitForm);
 
